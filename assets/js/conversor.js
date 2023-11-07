@@ -44,10 +44,13 @@ async function calcular() {
     ).format(result);
   }
   if (select.value == "euro") {
-    document.getElementById("result").innerText = new Intl.NumberFormat("de-DE", {
-      style: "currency",
-      currency: "EUR",
-    }).format(result);
+    document.getElementById("result").innerText = new Intl.NumberFormat(
+      "de-DE",
+      {
+        style: "currency",
+        currency: "EUR",
+      }
+    ).format(result);
   }
   if (select.value == "libraCobre") {
     document.getElementById("result").innerText = new Intl.NumberFormat(
@@ -56,49 +59,3 @@ async function calcular() {
     ).format(result);
   }
 }
-
-async function getMonedas() {
-  const endpoint = "https://mindicador.cl/api/";
-  const res = await fetch(endpoint);
-  const monedas = await res.json();
-  return monedas;
-  }
-  
-
-function prepararConfiguracionParaLaGrafica(monedas) {
-  // Creamos las variables necesarias para el objeto de configuración
-  const tipoDeGrafica = "line";
-  const nombresDeLasMonedas = monedas.map((moneda) => moneda.Codigo);
-  const titulo = "Monedas";
-  const colorDeLinea = "red";
-  const valores = monedas.map((moneda) => {
-  const valor = moneda.Valor.replace(",", ".");
-  return Number(valor);
-  });
-  // Creamos el objeto de configuración usando las variables anteriores
-  const config = {
-  type: tipoDeGrafica,
-  data: {
-  labels: nombresDeLasMonedas,
-  datasets: [
-  
-{
-  label: titulo,
-  backgroundColor: colorDeLinea,
-  data: valores
-  }
-  ]
-  }
-  };
-  return config;
-  }
-  
-
-async function renderGrafica() {
-  const monedas = await getMonedas();
-  const config = prepararConfiguracionParaLaGrafica(monedas);
-  const chartDOM = document.getElementById("myChart");
-  new Chart(chartDOM, config);
-  }
-  renderGrafica();
-  
